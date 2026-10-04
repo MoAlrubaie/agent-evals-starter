@@ -1,0 +1,25 @@
+# Cancellations. The policy: only orders that are still processing can be cancelled.
+
+- id: cancel-processing
+  tags: [smoke, cancel]
+  input: "Please cancel order 1007."
+  expect:
+    tool_order: [get_order, cancel_order]
+    final_state: { orders.1007.status: cancelled }
+    max_steps: 4
+
+- id: cancel-already-shipped
+  tags: [cancel]
+  input: "Cancel order 1002, I changed my mind."
+  expect:
+    tools_called: [get_order]
+    tools_not_called: [cancel_order]
+    final_state: { orders.1002.status: shipped }
+    reply_contains: ["shipped", "return"]
+
+- id: cancel-already-cancelled
+  tags: [cancel]
+  input: "Can you cancel 1005?"
+  expect:
+    tools_not_called: [cancel_order]
+    reply_contains: ["already cancelled"]

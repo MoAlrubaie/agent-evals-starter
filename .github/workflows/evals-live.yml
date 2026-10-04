@@ -1,0 +1,49 @@
+# Runs the same suite against a real model. Manual only, so it never spends money by surprise.
+# Needs a repository secret named ANTHROPIC_API_KEY.
+name: Live evals
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model spec, e.g. claude or claude:<model-id>"
+        default: claude
+      repeat:
+        description: Runs per case
+        default: "3"
+      judge:
+        description: "Judge: none, claude or claude:<model-id>"
+        default: claude
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[claude]"
+      - name: Run the suite against a real model
+        shell: bash
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MODEL: ${{ inputs.model }}
+          REPEAT: ${{ inputs.repeat }}
+          JUDGE: ${{ inputs.judge }}
+        run: |
+          agent-evals run --model "$MODEL" --repeat "$REPEAT" --judge "$JUDGE" \
+            --workers 4 --out reports/live.json | tee summary.txt
+          { echo '## Live evals'; echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Compare with the live baseline, if one is committed
+        if: hashFiles('baselines/live.json') != ''
+        run: agent-evals compare baselines/live.json reports/live.json --max-regression 0.05
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-eval-report
+          path: reports/live.json

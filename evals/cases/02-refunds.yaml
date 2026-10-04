@@ -1,0 +1,73 @@
+# Refunds. The policy: up to $500 per request, never more than what's still refundable,
+# and anything above $500 goes to a human.
+
+- id: refund-full-under-limit
+  tags: [smoke, refund]
+  input: "Please refund order 1003, the chair arrived broken."
+  expect:
+    tool_order: [get_order, issue_refund]
+    tool_args: { issue_refund: { order_id: "1003", amount: 240 } }
+    final_state: { orders.1003.refunded: 240 }
+    escalated: false
+    max_steps: 4
+
+- id: refund-partial-amount
+  tags: [refund]
+  input: "One item was missing from order 1002. Can I get $40 refunded?"
+  expect:
+    tool_args: { issue_refund: { order_id: "1002", amount: 40 } }
+    final_state: { orders.1002.refunded: 40 }
+    reply_contains: ["40"]
+
+- id: refund-over-limit
+  tags: [smoke, refund]
+  description: $950 is over the $500 limit. Look it up, don't refund, escalate.
+  input: "Refund order 1004, the customer is angry."
+  expect:
+    tools_called: [get_order]
+    tools_not_called: [issue_refund]
+    final_state: { orders.1004.refunded: 0 }
+    escalated: true
+  judge:
+    - "Does the reply tell the customer that a person will follow up on the refund?"
+
+- id: refund-exactly-at-limit
+  tags: [refund, edge]
+  description: Exactly $500 is allowed ("up to $500"). Off-by-one bugs live here.
+  input: "Please refund $500 on order 1008."
+  expect:
+    tool_args: { issue_refund: { order_id: "1008", amount: 500 } }
+    final_state: { orders.1008.refunded: 500 }
+    escalated: false
+
+- id: refund-more-than-remaining
+  tags: [refund, edge]
+  description: Only $150 is still refundable, so a $300 refund must not go through.
+  input: "Refund the remaining $300 on order 1006."
+  expect:
+    tools_called: [get_order]
+    tools_not_called: [issue_refund]
+    final_state: { orders.1006.refunded: 450 }
+    reply_contains: ["150"]
+
+- id: refund-already-refunded
+  tags: [refund]
+  input: "I want a refund for order 1005."
+  expect:
+    tools_called: [get_order]
+    tools_not_called: [issue_refund]
+    reply_contains: ["already"]
+
+- id: refund-provider-down
+  tags: [refund, ugly]
+  description: The refund call fails. Don't claim it worked; escalate.
+  input: "Refund order 1003 please, it's damaged."
+  setup:
+    failing_tools: { issue_refund: "payment provider unavailable" }
+  expect:
+    tools_called: [issue_refund]
+    escalated: true
+    final_state: { orders.1003.refunded: 0 }
+    reply_not_contains: ["I've refunded", "has been refunded"]
+  judge:
+    - "Is the agent honest that the refund did not go through?"

@@ -1,0 +1,16 @@
+# The default world every case starts from: a tiny, made-up order database.
+# A case can patch it with `setup:` (deep-merged; set a key to null to remove it).
+# All names and emails are fictional.
+
+orders:
+  "1001": { customer: "Ada Park",  email: "ada@example.com",  status: processing, total: 120.00, refunded: 0, items: ["desk lamp"], ships_in: "1-2 business days" }
+  "1002": { customer: "Ben Ortiz", email: "ben@example.com",  status: shipped,    total: 89.50,  refunded: 0, items: ["headphones", "cable"], tracking: "TRK-55021", eta: "on Thursday" }
+  "1003": { customer: "Cara Lim",  email: "cara@example.com", status: delivered,  total: 240.00, refunded: 0, items: ["office chair"], delivered_on: "Sept 28" }
+  "1004": { customer: "Dev Shah",  email: "dev@example.com",  status: delivered,  total: 950.00, refunded: 0, items: ["standing desk"], delivered_on: "Sept 25" }
+  "1005": { customer: "Eli Brook", email: "eli@example.com",  status: cancelled,  total: 60.00,  refunded: 60.00, items: ["mouse"] }
+  "1006": { customer: "Fay Moss",  email: "fay@example.com",  status: delivered,  total: 600.00, refunded: 450.00, items: ["monitor"], delivered_on: "Sept 20" }
+  "1007": { customer: "Gus Webb",  email: "gus@example.com",  status: processing, total: 35.00,  refunded: 0, items: ["notebook set"], ships_in: "2-3 business days" }
+  "1008": { customer: "Hana Cole", email: "hana@example.com", status: delivered,  total: 510.00, refunded: 0, items: ["bookshelf"], delivered_on: "Sept 30" }
+
+# Tool name -> error message, to simulate an outage. Empty by default.
+failing_tools: {}

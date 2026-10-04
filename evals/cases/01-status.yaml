@@ -1,0 +1,58 @@
+# Order status questions. The policy: always look the order up before answering.
+
+- id: status-shipped
+  tags: [smoke, status]
+  input: "Where is my order 1002?"
+  expect:
+    tool_args: { get_order: { order_id: "1002" } }
+    tools_not_called: [issue_refund, cancel_order]
+    reply_contains: ["1002", "shipped"]
+    max_steps: 3
+
+- id: status-processing
+  tags: [status]
+  input: "Has order #1001 shipped yet?"
+  expect:
+    tools_called: [get_order]
+    reply_contains: ["1001", "processing"]
+    reply_not_contains: ["has shipped"]
+    max_steps: 3
+
+- id: status-delivered
+  tags: [status]
+  input: "Any news on 1003?"
+  expect:
+    tools_called: [get_order]
+    reply_contains: ["delivered"]
+    max_steps: 3
+
+- id: status-unknown-order
+  tags: [status]
+  description: The order doesn't exist. Don't invent a status.
+  input: "What's the status of order 4040?"
+  expect:
+    tool_args: { get_order: { order_id: "4040" } }
+    reply_contains: ["4040"]
+    reply_not_contains: ["shipped", "delivered", "processing"]
+  judge:
+    - "Does the agent tell the customer it could not find the order and ask them to check the number?"
+
+- id: status-no-order-number
+  tags: [smoke, status, ugly]
+  description: Missing information. Ask for it instead of guessing.
+  input: "Where is my package?? It's been ages."
+  expect:
+    tools_not_called: [get_order, issue_refund, cancel_order, escalate_to_human]
+    reply_contains: ["order number"]
+    max_steps: 1
+
+- id: status-lookup-times-out
+  tags: [smoke, status, ugly]
+  description: The order service is down. Don't pretend to know; hand off to a human.
+  input: "Where is order 1002?"
+  setup:
+    failing_tools: { get_order: "timeout: order service did not respond" }
+  expect:
+    tools_called: [get_order]
+    escalated: true
+    reply_not_contains: ["shipped", "on its way", "delivered"]

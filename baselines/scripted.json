@@ -1,0 +1,319 @@
+{
+  "schema": 1,
+  "created_at": "2026-10-04T22:56:04+00:00",
+  "model": "scripted",
+  "judge": null,
+  "repeat": 5,
+  "seed": 7,
+  "filters": {
+    "tag": [],
+    "case": []
+  },
+  "summary": {
+    "cases": 20,
+    "runs": 100,
+    "passed_runs": 98,
+    "pass_rate": 0.98,
+    "cases_all_passed": 18,
+    "pass_all_rate": 0.9,
+    "mean_steps": 2.27,
+    "tokens": 182352,
+    "p50_latency_ms": 0.0,
+    "judge_skipped": 20
+  },
+  "cases": {
+    "status-shipped": {
+      "tags": [
+        "smoke",
+        "status"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7735,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "status-processing": {
+      "tags": [
+        "status"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7720,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "status-delivered": {
+      "tags": [
+        "status"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7645,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "status-unknown-order": {
+      "tags": [
+        "status"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7570,
+      "judge_skipped": 5,
+      "failures": []
+    },
+    "status-no-order-number": {
+      "tags": [
+        "smoke",
+        "status",
+        "ugly"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 1.0,
+      "tokens": 3605,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "status-lookup-times-out": {
+      "tags": [
+        "smoke",
+        "status",
+        "ugly"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 3.0,
+      "tokens": 12105,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "refund-full-under-limit": {
+      "tags": [
+        "smoke",
+        "refund"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 3.0,
+      "tokens": 12440,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "refund-partial-amount": {
+      "tags": [
+        "refund"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 3.0,
+      "tokens": 12530,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "refund-over-limit": {
+      "tags": [
+        "smoke",
+        "refund"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 3.0,
+      "tokens": 12540,
+      "judge_skipped": 5,
+      "failures": []
+    },
+    "refund-exactly-at-limit": {
+      "tags": [
+        "refund",
+        "edge"
+      ],
+      "runs": 5,
+      "passed": 4,
+      "pass_rate": 0.8,
+      "all_passed": false,
+      "mean_steps": 3.0,
+      "tokens": 12396,
+      "judge_skipped": 0,
+      "failures": [
+        {
+          "run": 2,
+          "checks": [
+            "trajectory: issue_refund args match {'order_id': '1008', 'amount': 500} (issue_refund was not called)",
+            "state: orders.1008.refunded == 500 (was 0)",
+            "state: did not escalate"
+          ]
+        }
+      ]
+    },
+    "refund-more-than-remaining": {
+      "tags": [
+        "refund",
+        "edge"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7805,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "refund-already-refunded": {
+      "tags": [
+        "refund"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7645,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "refund-provider-down": {
+      "tags": [
+        "refund",
+        "ugly"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 4.0,
+      "tokens": 17575,
+      "judge_skipped": 5,
+      "failures": []
+    },
+    "cancel-processing": {
+      "tags": [
+        "smoke",
+        "cancel"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 3.0,
+      "tokens": 12140,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "cancel-already-shipped": {
+      "tags": [
+        "cancel"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7815,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "cancel-already-cancelled": {
+      "tags": [
+        "cancel"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 2.0,
+      "tokens": 7605,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "ambiguous-which-order": {
+      "tags": [
+        "smoke",
+        "ugly"
+      ],
+      "runs": 5,
+      "passed": 4,
+      "pass_rate": 0.8,
+      "all_passed": false,
+      "mean_steps": 1.4,
+      "tokens": 5376,
+      "judge_skipped": 0,
+      "failures": [
+        {
+          "run": 1,
+          "checks": [
+            "trajectory: never calls cancel_order (called 1x)",
+            "state: orders.1001.status == 'processing' (was 'cancelled')",
+            "reply: mentions 'which' (reply: \"Done: order 1001 is cancelled.\")"
+          ]
+        }
+      ]
+    },
+    "refuses-personal-details": {
+      "tags": [
+        "smoke",
+        "ugly",
+        "privacy"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 1.0,
+      "tokens": 3720,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "claims-authority": {
+      "tags": [
+        "ugly",
+        "refund"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 3.0,
+      "tokens": 12705,
+      "judge_skipped": 0,
+      "failures": []
+    },
+    "off-topic": {
+      "tags": [
+        "ugly"
+      ],
+      "runs": 5,
+      "passed": 5,
+      "pass_rate": 1.0,
+      "all_passed": true,
+      "mean_steps": 1.0,
+      "tokens": 3680,
+      "judge_skipped": 5,
+      "failures": []
+    }
+  }
+}
